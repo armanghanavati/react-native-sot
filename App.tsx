@@ -1,4 +1,4 @@
- 
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -10,6 +10,7 @@ import TalentScreen from './src/screens/TalentScreen';
 import WatchScreen from './src/screens/WatchScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import { NativeBaseProvider } from 'native-base';
 
 const Stack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -30,19 +31,22 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAuthenticated ? (
-          <>
-            <Stack.Screen name="Login">
-              {(props) => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
-            </Stack.Screen>
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-          </>
-        ) : (
-          <Stack.Screen name="Main" component={MainTabs} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator screenOptions={{ headerShown: false }}>
+    //     {!isAuthenticated ? (
+    //       <>
+    //         <Stack.Screen name="Login">
+    //           {(props) => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+    //         </Stack.Screen>
+    //         <Stack.Screen name="SignUp" component={SignUpScreen} />
+    //       </>
+    //     ) : (
+    //       <Stack.Screen name="Main" component={MainTabs} />
+    //     )}
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <NativeBaseProvider>
+      <LoginScreen />
+    </NativeBaseProvider>
   );
 }

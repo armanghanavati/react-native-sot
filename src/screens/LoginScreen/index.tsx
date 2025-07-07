@@ -1,42 +1,61 @@
 import React, { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Box, VStack, Heading, Center, useToast } from 'native-base';
+import InputBase from '../../components/InputBase';
+import ButtonBase from '../../components/ButtonBase';
 
-export default function LoginScreen({ navigation, setIsAuthenticated }: any) {
+export default function LoginScreen() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const toast: any = useToast();
 
     const handleLogin = () => {
-        if (username === 'arman' && password === '123') {
-            setIsAuthenticated(true);
-        } else {
-            Alert.alert('Invalid Credentials', 'Please check your username and password.');
-        }
+        setIsLoading(true);
+
+        // شبیه‌سازی یک درخواست لاگین
+        setTimeout(() => {
+            setIsLoading(false);
+
+            if (username === 'test' && password === '1234') {
+                toast.show({
+                    title: 'Login Successful',
+                    status: 'success',
+                    placement: 'top',
+                });
+            } else {
+                toast.show({
+                    title: 'Invalid Credentials',
+                    status: 'error',
+                    placement: 'top',
+                });
+            }
+        }, 2000);
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            <Button title="Login" onPress={handleLogin} />
-            <Button title="Sign Up" onPress={() => navigation.navigate('SignUp')} />
-        </View>
+        <Center flex={1} bg="white">
+            <Box safeArea p="4" py="8" w="90%" maxW="400" bg="white" shadow="2" borderRadius="md">
+                <Heading size="lg" fontWeight="600" color="coolGray.800" textAlign="center" mb="6">
+                    Welcome Back
+                </Heading>
+
+                <VStack space={4}>
+                    <InputBase
+                        label="Username"
+                        placeholder="Enter your username"
+                        value={username}
+                        onChangeText={setUsername}
+                    />
+                    <InputBase
+                        label="Password"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChangeText={setPassword}
+                        isPassword
+                    />
+                    <ButtonBase title="Login" onPress={handleLogin} isLoading={isLoading} />
+                </VStack>
+            </Box>
+        </Center>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 16 },
-    title: { fontSize: 24, marginBottom: 16, textAlign: 'center' },
-    input: { borderWidth: 1, padding: 8, marginBottom: 16, borderRadius: 4 },
-});
