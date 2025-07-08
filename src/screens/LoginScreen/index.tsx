@@ -2,19 +2,35 @@ import { useState } from "react";
 import { Box, VStack, Heading, Center, useToast } from "native-base";
 import InputBase from "../../components/InputBase";
 import ButtonBase from "../../components/ButtonBase";
+import { login } from "../../services/dotNet";
 
 const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const toast: any = useToast();
-  const handleLogin = () => {
-    setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
+  const handleLogin = async () => {
+    const postData = {
+      userName: username,
+      password: password,
+    };
 
-      if (username === "test" && password === "1234") {
+    try {
+      setIsLoading(true);
+      const res = await login(postData);
+      console.log(res);
+      const { status, data } = res?.data;
+      if (status === 0) {
+        //   const fixUser: any = jwtDecode(data?.token);
+        //   const userId =
+        //     fixUser[
+        //       "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        //     ];
+        //   let Vals = Object.values(fixUser);
+        //   sessionStorage.setItem("token", data?.token);
+        //   sessionStorage.setItem("userId", userId);
+        setIsLoading(false);
         toast.show({
           title: "Login Successful",
           status: "success",
@@ -28,7 +44,9 @@ const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
           placement: "top",
         });
       }
-    }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -49,9 +67,7 @@ const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
           color="coolGray.800"
           textAlign="center"
           mb="6"
-        >
-          Welcome Back
-        </Heading>
+        ></Heading>
 
         <VStack space={4}>
           <InputBase
