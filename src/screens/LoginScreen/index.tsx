@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, VStack, Heading, Center, useToast } from "native-base";
+import { Box, VStack, Heading, Center, useToast, Image } from "native-base";
 import InputBase from "../../components/InputBase";
 import ButtonBase from "../../components/ButtonBase";
 import { login } from "../../services/dotNet";
@@ -61,6 +61,15 @@ const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
         shadow="2"
         borderRadius="md"
       >
+        <Image
+          source={require("../../../assets/image/1724181984017.jpg")}
+          alt="App Logo"
+          size="xl"
+          resizeMode="contain"
+          alignSelf="center"
+          mb="4"
+        />
+
         <Heading
           size="lg"
           fontWeight="600"
