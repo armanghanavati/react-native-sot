@@ -3,6 +3,7 @@ import { Box, VStack, Heading, Center, useToast, Image } from "native-base";
 import InputBase from "../../components/InputBase";
 import ButtonBase from "../../components/ButtonBase";
 import { login } from "../../services/dotNet";
+import * as Keychain from "react-native-keychain";
 
 const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState("");
@@ -19,33 +20,37 @@ const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
     try {
       setIsLoading(true);
       const res = await login(postData);
-      console.log(res);
       const { status, data } = res?.data;
+
       if (status === 0) {
-        //   const fixUser: any = jwtDecode(data?.token);
-        //   const userId =
-        //     fixUser[
-        //       "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        //     ];
-        //   let Vals = Object.values(fixUser);
-        //   sessionStorage.setItem("token", data?.token);
-        //   sessionStorage.setItem("userId", userId);
-        setIsLoading(false);
+        await Keychain.setGenericPassword("authToken", data?.token, {
+          service: "com.yourapp.jwt",
+          accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+        });
+
         toast.show({
           title: "Login Successful",
           status: "success",
-          placement: "top",
+          placement: "bottom",
         });
         setIsAuthenticated(true);
       } else {
         toast.show({
           title: "Invalid Credentials",
           status: "error",
-          placement: "top",
+          placement: "bottom",
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
+      toast.show({
+        title: "Login Failed",
+        description: "An error occurred",
+        status: "error",
+        placement: "bottom",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +63,6 @@ const LoginScreen: React.FC<any> = ({ setIsAuthenticated }) => {
         w="90%"
         maxW="400"
         bg="white"
-        shadow="2"
         borderRadius="md"
       >
         <Image

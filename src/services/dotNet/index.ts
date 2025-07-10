@@ -7,3 +7,8 @@ export const login = async (postData: any) => {
   const url = `${DOT_NET_URL}/login`;
   return await axios.post(url, postData);
 };
+
+export const categoryList = async () => {
+  const url = `${DOT_NET_URL}/categoryList`;
+  return await axios.get(url);
+};
